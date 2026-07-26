@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mi Vitrina</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF6F0;
+    --ink:#2B2018;
+    --ink-soft:#5b4c40;
+    --wine:#7A2A38;
+    --wine-dark:#5C1F2A;
+    --gold:#B98429;
+    --rose:#F1D9D2;
+    --card:#FFFFFF;
+    --line: rgba(43,32,24,0.14);
+    --shadow: 0 10px 30px -12px rgba(43,32,24,0.25);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    min-height:100vh;
+  }
+  a{color:inherit;}
+  button{font-family:inherit;cursor:pointer;}
+
+  /* ---------- Header ---------- */
+  .site-header{
+    background:var(--wine);
+    color:#fff;
+    padding:38px 24px 46px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .site-header::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0; height:14px;
+    background-image: repeating-linear-gradient(-45deg, transparent, transparent 8px, rgba(255,255,255,0.10) 8px, rgba(255,255,255,0.10) 16px);
+  }
+  .store-name{
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-weight:600;
+    font-size:clamp(2rem, 5vw, 3rem);
+    margin:0;
+    letter-spacing:0.3px;
+  }
+  .store-tagline{
+    margin:10px 0 0;
+    font-size:0.95rem;
+    color:rgba(255,255,255,0.85);
+    font-weight:400;
+  }
+  .admin-pin{
+    position:absolute; top:16px; right:18px;
+    background:rgba(255,255,255,0.14);
+    border:1px solid rgba(255,255,255,0.3);
+    color:#fff;
+    border-radius:20px;
+    padding:6px 14px;
+    font-size:0.78rem;
+    letter-spacing:0.02em;
+  }
+  .admin-pin:hover{background:rgba(255,255,255,0.24);}
+
+  /* ---------- Catalog ---------- */
+  main{max-width:1100px;margin:0 auto;padding:36px 20px 80px;}
+  .catalog-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+    gap:34px 24px;
+  }
+  .empty-state{
+    text-align:center;
+    padding:70px 20px;
+    color:var(--ink-soft);
+  }
+  .empty-state h3{font-family:'Fraunces',serif;font-size:1.5rem;color:var(--ink);margin-bottom:8px;}
+
+  .tag-card{
+    position:relative;
+    background:var(--card);
+    border:1px dashed var(--line);
+    border-radius:6px;
+    padding:22px 16px 18px;
+    box-shadow:var(--shadow);
+    transition:transform .25s ease;
+  }
+  .tag-card:hover{ transform: translateY(-3px); }
+  .tag-hole{
+    position:absolute; top:-11px; left:50%; transform:translateX(-50%);
+    width:20px; height:20px; border-radius:50%;
+    background:var(--bg);
+    border:2px solid var(--wine);
+  }
+  .tag-brand{
+    display:inline-block;
+    font-size:0.68rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--wine);
+    background:var(--rose);
+    padding:3px 9px;
+    border-radius:20px;
+    margin-bottom:10px;
+    font-weight:600;
+  }
+  .tag-img-wrap{
+    width:100%; aspect-ratio:1/1;
+    border-radius:4px;
+    overflow:hidden;
+    background:var(--rose);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:12px;
+  }
+  .tag-img-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+  .tag-img-wrap .no-img{color:var(--wine);opacity:0.5;font-family:'Fraunces',serif;font-size:2rem;}
+  .tag-name{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:1.08rem;
+    margin:0 0 4px;
+    line-height:1.25;
+  }
+  .tag-desc{
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    margin:0 0 12px;
+    line-height:1.4;
+  }
+  .tag-price{
+    font-family:'Space Mono', monospace;
+    font-weight:700;
+    color:var(--gold);
+    font-size:1.15rem;
+    margin-bottom:14px;
+  }
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    border:none; border-radius:8px;
+    padding:10px 14px;
+    font-size:0.85rem;
+    font-weight:600;
+    width:100%;
+  }
+  .btn-wine{background:var(--wine); color:#fff;}
+  .btn-wine:hover{background:var(--wine-dark);}
+  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink);}
+  .btn-gold{background:var(--gold);color:#fff;}
+
+  footer{
+    text-align:center; padding:26px 20px 40px;
+    font-size:0.78rem; color:var(--ink-soft);
+  }
+
+  /* ---------- Modal / Admin ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(43,32,24,0.45);
+    display:flex; align-items:flex-start; justify-content:center;
+    padding:40px 16px; overflow-y:auto;
+    z-index:50;
+  }
+  .hidden{display:none !important;}
+  .panel{
+    background:var(--bg);
+    width:100%; max-width:560px;
+    border-radius:14px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.4);
+    padding:28px 26px 30px;
+  }
+  .panel h2{
+    font-family:'Fraunces',serif; font-weight:600; margin:0 0 6px;
+    font-size:1.5rem;
+  }
+  .panel p.sub{margin:0 0 20px;color:var(--ink-soft);font-size:0.88rem;}
+  label{display:block; font-size:0.8rem; font-weight:600; margin:14px 0 5px;}
+  input[type=text], input[type=number], input[type=password], input[type=tel], textarea{
+    width:100%; padding:10px 12px; border-radius:8px;
+    border:1px solid var(--line); background:#fff;
+    font-family:inherit; font-size:0.92rem; color:var(--ink);
+  }
+  textarea{resize:vertical; min-height:60px;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .panel-actions{display:flex; gap:10px; margin-top:22px;}
+  .panel-actions .btn{width:auto; flex:1;}
+  .close-x{
+    position:absolute; top:14px; right:16px;
+    background:none;border:none;font-size:1.3rem;color:var(--ink-soft);
+    line-height:1;
+  }
+  .panel-wrap{position:relative;}
+
+  .admin-list{margin-top:24px; border-top:1px solid var(--line); padding-top:16px;}
+  .admin-row{
+    display:flex; align-items:center; gap:12px;
+    padding:10px 0; border-bottom:1px solid var(--line);
+  }
+  .admin-row img{width:44px;height:44px;object-fit:cover;border-radius:6px;background:var(--rose);}
+  .admin-row .no-img-sm{width:44px;height:44px;border-radius:6px;background:var(--rose);}
+  .admin-row .info{flex:1;min-width:0;}
+  .admin-row .info b{font-size:0.9rem;display:block;}
+  .admin-row .info span{font-size:0.78rem;color:var(--ink-soft);}
+  .icon-btn{
+    background:none;border:1px solid var(--line);border-radius:6px;
+    width:30px;height:30px;font-size:0.85rem;
+  }
+  .icon-btn.danger{color:#b02b2b;border-color:#e3b7b7;}
+  .tabs{display:flex;gap:8px;margin-bottom:16px;}
+  .tab-btn{
+    background:none;border:1px solid var(--line);border-radius:20px;
+    padding:6px 14px;font-size:0.82rem;font-weight:600;color:var(--ink-soft);
+  }
+  .tab-btn.active{background:var(--wine);color:#fff;border-color:var(--wine);}
+  .helptext{font-size:0.75rem;color:var(--ink-soft);margin-top:4px;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <button class="admin-pin" id="openAdminBtn">Panel ⚙</button>
+  <h1 class="store-name" id="storeNameDisplay">Mi Vitrina</h1>
+  <p class="store-tagline" id="storeTaglineDisplay">Todo lo que tengo para ti, en un solo lugar</p>
+</header>
+
+<main>
+  <div id="catalogGrid" class="catalog-grid"></div>
+  <div id="emptyState" class="empty-state hidden">
+    <h3>Aún no hay productos</h3>
+    <p>Entra al panel para agregar el primero.</p>
+  </div>
+</main>
+
+<footer id="footerContact"></footer>
+
+<!-- LOGIN MODAL -->
+<div class="overlay hidden" id="loginOverlay">
+  <div class="panel panel-wrap">
+    <button class="close-x" data-close="loginOverlay">✕</button>
+    <h2>Entrar al panel</h2>
+    <p class="sub">Usa el email y contraseña de tu usuario en Supabase Auth.</p>
+    <label>Email</label>
+    <input  type="text" id="loginEmail" placeholder="tu@email.com" autocomplete="username" />
+    <label>Contraseña</label>
+    <input type="password" id="loginPassword" placeholder="••••••" autocomplete="current-password" />
+    <p class="helptext" id="loginError" style="color:#b02b2b;"></p>
+    <div class="panel-actions">
+      <button class="btn btn-wine" id="loginSubmit">Entrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="overlay hidden" id="adminOverlay">
+  <div class="panel panel-wrap" style="max-width:640px;">
+    <button class="close-x" data-close="adminOverlay">✕</button>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="productsTab">Productos</button>
+      <button class="tab-btn" data-tab="settingsTab">Datos de mi vitrina</button>
+    </div>
+
+    <div id="productsTab">
+      <h2 id="formTitle">Agregar producto</h2>
+      <input type="hidden" id="editingId" />
+      <label>Nombre del producto</label>
+      <input type="text" id="pName" placeholder="Ej: Perfume Cassé de Yanbal" />
+
+      <div class="row2">
+        <div>
+          <label>Marca / origen</label>
+          <input type="text" id="pBrand" placeholder="Yanbal, Leonisa, Shein, Premio..." />
+        </div>
+        <div>
+          <label>Precio ($)</label>
+          <input type="number" id="pPrice" placeholder="25" min="0" step="0.01" />
+        </div>
+      </div>
+
+      <label>Descripción corta (opcional)</label>
+      <textarea id="pDesc" placeholder="Talla, color, estado..."></textarea>
+
+      <label>Imagen</label>
+      <input type="file" id="pImageFile" accept="image/*" />
+      <p class="helptext">O pega el enlace de una imagen:</p>
+      <input type="text" id="pImageUrl" placeholder="https://..." />
+
+      <div class="panel-actions">
+        <button class="btn btn-wine" id="saveProductBtn">Guardar producto</button>
+        <button class="btn btn-ghost hidden" id="cancelEditBtn">Cancelar edición</button>
+      </div>
+
+      <div class="admin-list" id="adminProductList"></div>
+    </div>
+
+    <div id="settingsTab" class="hidden">
+      <h2>Datos de mi vitrina</h2>
+      <label>Nombre de la tienda</label>
+      <input type="text" id="sStoreName" />
+      <label>Frase corta</label>
+      <input type="text" id="sTagline" />
+      <label>Tu WhatsApp (con código de país, ej: 5939XXXXXXXX)</label>
+      <input type="tel" id="sWhatsapp" placeholder="5939XXXXXXXX" />
+      <label>Nueva contraseña de tu cuenta (opcional)</label>
+      <input type="password" id="sPassword" placeholder="Mínimo 6 caracteres" autocomplete="new-password" />
+      <div class="panel-actions">
+        <button class="btn btn-wine" id="saveSettingsBtn">Guardar datos</button>
+        <button class="btn btn-ghost" type="button" id="logoutBtn">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+const defaultSettings = {
+  storeName:'Mi Vitrina',
+  tagline:'Todo lo que tengo para ti, en un solo lugar',
+  whatsapp:''
+};
+
+let data = { settings: { ...defaultSettings }, products: [] };
+
+let supabaseClient = null;
+function supabaseEnabled(){
+  const key = window.SUPABASE_ANON_KEY || '';
+  return window.SUPABASE_URL && key && key !== 'tu-anon-key-aqui';
+}
+function getSupabase(){
+  if(!supabaseEnabled()) return null;
+  if(!supabaseClient){
+    supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+  }
+  return supabaseClient;
+}
+function rowToProduct(row){
+  return {
+    id: row.id,
+    name: row.name,
+    brand: row.brand || '',
+    price: row.price != null ? Number(row.price) : null,
+    desc: row.description || '',
+    image: row.image_url || null
+  };
+}
+function productToRow(p){
+  return {
+    id: p.id,
+    name: p.name,
+    brand: p.brand || null,
+    price: p.price,
+    description: p.desc || null,
+    image_url: p.image || null
+  };
+}
+async function loadStoreSettingsFromSupabase(){
+  const sb = getSupabase();
+  if(!sb) return;
+  const { data: row, error } = await sb.from('store_settings').select('store_name, tagline, whatsapp').eq('id', 1).maybeSingle();
+  if(error){
+    console.error('Supabase settings:', error);
+    if(isMissingStoreSettingsTable(error)){
+      console.warn('Ejecuta supabase-store-settings.sql en tu proyecto Supabase.');
+    }
+    return;
+  }
+  if(row){
+    data.settings = {
+      storeName: row.store_name || defaultSettings.storeName,
+      tagline: row.tagline || '',
+      whatsapp: row.whatsapp || ''
+    };
+  }
+}
+async function loadProductsFromSupabase(){
+  const sb = getSupabase();
+  if(!sb) return;
+  const { data: rows, error } = await sb.from('products').select('*').order('created_at', { ascending: false });
+  if(error){
+    console.error('Supabase:', error);
+    alert('No pude cargar productos. Revisa la consola y las políticas RLS.');
+    return;
+  }
+  data.products = (rows || []).map(rowToProduct);
+}
+async function requireSession(){
+  const sb = getSupabase();
+  if(!sb) throw new Error('Supabase no configurado.');
+  const { data: sessionData, error } = await sb.auth.getSession();
+  if(error) throw error;
+  if(!sessionData.session) throw new Error('Debes iniciar sesión para hacer cambios.');
+  return sessionData.session;
+}
+function authErrorMessage(err){
+  if(!err) return 'Error desconocido.';
+  if(err.message === 'Invalid login credentials') return 'Email o contraseña incorrectos.';
+  if(isMissingStoreSettingsTable(err)){
+    return 'Falta la tabla store_settings. En Supabase → SQL Editor ejecuta supabase-store-settings.sql y recarga esta página.';
+  }
+  return err.message;
+}
+function isMissingStoreSettingsTable(err){
+  const msg = (err.message || err.details || '').toLowerCase();
+  return err.code === 'PGRST205' || (msg.includes('store_settings') && msg.includes('schema cache'));
+}
+async function persistProduct(product){
+  await requireSession();
+  const sb = getSupabase();
+  const row = productToRow(product);
+  const { error } = await sb.from('products').upsert(row);
+  if(error) throw error;
+}
+async function removeProductFromSupabase(id){
+  await requireSession();
+  const sb = getSupabase();
+  const { error } = await sb.from('products').delete().eq('id', id);
+  if(error) throw error;
+}
+async function saveStoreSettingsToSupabase(){
+  await requireSession();
+  const sb = getSupabase();
+  const payload = {
+    id: 1,
+    store_name: data.settings.storeName,
+    tagline: data.settings.tagline,
+    whatsapp: data.settings.whatsapp
+  };
+  const { error } = await sb.from('store_settings').upsert(payload, { onConflict: 'id' });
+  if(error) throw error;
+}
+let editingId = null;
+
+function el(id){ return document.getElementById(id); }
+function openOverlay(id){ el(id).classList.remove('hidden'); }
+function closeOverlay(id){ el(id).classList.add('hidden'); }
+
+document.querySelectorAll('[data-close]').forEach(btn=>{
+  btn.addEventListener('click', ()=> closeOverlay(btn.dataset.close));
+});
+
+/* ---------- Render public catalog ---------- */
+function renderPublic(){
+  el('storeNameDisplay').textContent = data.settings.storeName || 'Mi Vitrina';
+  el('storeTaglineDisplay').textContent = data.settings.tagline || '';
+  const grid = el('catalogGrid');
+  const empty = el('emptyState');
+  grid.innerHTML = '';
+  if(data.products.length === 0){
+    empty.classList.remove('hidden');
+  } else {
+    empty.classList.add('hidden');
+    data.products.forEach((p, i)=>{
+      const card = document.createElement('div');
+      card.className = 'tag-card';
+      const waNumber = (data.settings.whatsapp || '').replace(/\D/g,'');
+      const waMsg = encodeURIComponent(`Hola, me interesa "${p.name}"`);
+      const waLink = waNumber ? `https://wa.me/${waNumber}?text=${waMsg}` : null;
+      card.innerHTML = `
+        <div class="tag-hole"></div>
+        ${p.brand ? `<span class="tag-brand">${escapeHtml(p.brand)}</span>` : ''}
+        <div class="tag-img-wrap">
+          ${p.image ? `<img src="${p.image}" alt="${escapeHtml(p.name)}"/>` : `<span class="no-img">✦</span>`}
+        </div>
+        <h3 class="tag-name">${escapeHtml(p.name)}</h3>
+        ${p.desc ? `<p class="tag-desc">${escapeHtml(p.desc)}</p>` : ''}
+        <div class="tag-price">${p.price !== '' && p.price!=null ? '$'+Number(p.price).toFixed(2) : ''}</div>
+        ${waLink
+          ? `<a class="btn btn-wine" href="${waLink}" target="_blank">Escríbeme por WhatsApp</a>`
+          : `<button class="btn btn-ghost" disabled>Agrega tu WhatsApp en el panel</button>`}
+      `;
+      grid.appendChild(card);
+    });
+  }
+
+  const footer = el('footerContact');
+  if(data.settings.whatsapp){
+    footer.innerHTML = `Escríbeme directo por WhatsApp: <b>${data.settings.whatsapp}</b>`;
+  } else {
+    footer.innerHTML = `Vitrina personal · hecha con cariño`;
+  }
+}
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str ?? '';
+  return d.innerHTML;
+}
+
+/* ---------- Admin: login ---------- */
+async function openAdminPanel(){
+  fillSettingsForm();
+  renderAdminList();
+  openOverlay('adminOverlay');
+}
+el('openAdminBtn').addEventListener('click', async ()=>{
+  el('loginError').textContent='';
+  const sb = getSupabase();
+  if(!supabaseEnabled()){
+    alert('Configura el archivo .env (copia .env.example) y arranca con npm run dev.');
+    return;
+  }
+  const { data: sessionData } = await sb.auth.getSession();
+  if(sessionData.session){
+    await openAdminPanel();
+    return;
+  }
+  el('loginPassword').value='';
+  openOverlay('loginOverlay');
+});
+el('loginSubmit').addEventListener('click', async ()=>{
+  const sb = getSupabase();
+  const email = el('loginEmail').value.trim();
+  const password = el('loginPassword').value;
+  if(!email || !password){
+    el('loginError').textContent = 'Escribe email y contraseña.';
+    return;
+  }
+  el('loginSubmit').disabled = true;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  el('loginSubmit').disabled = false;
+  if(error){
+    el('loginError').textContent = authErrorMessage(error);
+    return;
+  }
+  closeOverlay('loginOverlay');
+  await openAdminPanel();
+});
+el('logoutBtn').addEventListener('click', async ()=>{
+  const sb = getSupabase();
+  await sb.auth.signOut();
+  closeOverlay('adminOverlay');
+});
+
+/* ---------- Admin: tabs ---------- */
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#productsTab, #settingsTab').forEach(t=>t.classList.add('hidden'));
+    el(btn.dataset.tab).classList.remove('hidden');
+  });
+});
+
+/* ---------- Admin: settings ---------- */
+function fillSettingsForm(){
+  el('sStoreName').value = data.settings.storeName || '';
+  el('sTagline').value = data.settings.tagline || '';
+  el('sWhatsapp').value = data.settings.whatsapp || '';
+  el('sPassword').value = '';
+}
+el('saveSettingsBtn').addEventListener('click', async ()=>{
+  data.settings.storeName = el('sStoreName').value.trim() || 'Mi Vitrina';
+  data.settings.tagline = el('sTagline').value.trim();
+  data.settings.whatsapp = el('sWhatsapp').value.trim();
+  const newPassword = el('sPassword').value.trim();
+  el('saveSettingsBtn').disabled = true;
+  try{
+    await saveStoreSettingsToSupabase();
+    if(newPassword){
+      const sb = getSupabase();
+      const { error } = await sb.auth.updateUser({ password: newPassword });
+      if(error) throw error;
+      el('sPassword').value = '';
+    }
+    renderPublic();
+    alert('Datos guardados.');
+  }catch(err){
+    console.error(err);
+    alert(authErrorMessage(err) || 'No se pudieron guardar los datos.');
+  }finally{
+    el('saveSettingsBtn').disabled = false;
+  }
+});
+
+/* ---------- Admin: products ---------- */
+let pendingImage = null;
+
+el('pImageFile').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const maxW = 640;
+      const scale = Math.min(1, maxW / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      pendingImage = canvas.toDataURL('image/jpeg', 0.8);
+      el('pImageUrl').value = '';
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+function resetProductForm(){
+  editingId = null;
+  el('formTitle').textContent = 'Agregar producto';
+  el('pName').value='';
+  el('pBrand').value='';
+  el('pPrice').value='';
+  el('pDesc').value='';
+  el('pImageUrl').value='';
+  el('pImageFile').value='';
+  pendingImage = null;
+  el('cancelEditBtn').classList.add('hidden');
+}
+
+el('cancelEditBtn').addEventListener('click', resetProductForm);
+
+el('saveProductBtn').addEventListener('click', async ()=>{
+  const name = el('pName').value.trim();
+  if(!name){ alert('Ponle un nombre al producto.'); return; }
+  if(!supabaseEnabled()){
+    alert('Configura Supabase en .env (SUPABASE_URL y SUPABASE_ANON_KEY) y usa npm run dev.');
+    return;
+  }
+  const btn = el('saveProductBtn');
+  btn.disabled = true;
+  const image = pendingImage || el('pImageUrl').value.trim() || null;
+  const productData = {
+    name,
+    brand: el('pBrand').value.trim(),
+    price: el('pPrice').value === '' ? null : Number(el('pPrice').value),
+    desc: el('pDesc').value.trim(),
+    image
+  };
+  try{
+    if(editingId){
+      const idx = data.products.findIndex(p=>p.id === editingId);
+      const prev = idx > -1 ? data.products[idx] : null;
+      const merged = {
+        ...(prev || {}),
+        ...productData,
+        id: editingId
+      };
+      await persistProduct(merged);
+      if(idx > -1) data.products[idx] = merged;
+      else data.products.unshift(merged);
+    } else {
+      productData.id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now());
+      await persistProduct(productData);
+      data.products.unshift(productData);
+    }
+    renderPublic();
+    renderAdminList();
+    resetProductForm();
+  }catch(err){
+    console.error(err);
+    alert(err.message || 'Error al guardar en Supabase.');
+  }finally{
+    btn.disabled = false;
+  }
+});
+
+function renderAdminList(){
+  const list = el('adminProductList');
+  list.innerHTML = '';
+  if(data.products.length === 0){
+    list.innerHTML = '<p class="helptext">Todavía no has agregado productos.</p>';
+    return;
+  }
+  data.products.forEach(p=>{
+    const row = document.createElement('div');
+    row.className = 'admin-row';
+    row.innerHTML = `
+      ${p.image ? `<img src="${p.image}"/>` : `<div class="no-img-sm"></div>`}
+      <div class="info">
+        <b>${escapeHtml(p.name)}</b>
+        <span>${p.brand ? escapeHtml(p.brand)+' · ' : ''}${p.price!=null ? '$'+Number(p.price).toFixed(2) : 'sin precio'}</span>
+      </div>
+      <button class="icon-btn" data-edit="${p.id}">✎</button>
+      <button class="icon-btn danger" data-del="${p.id}">🗑</button>
+    `;
+    list.appendChild(row);
+  });
+  list.querySelectorAll('[data-edit]').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      const p = data.products.find(pr=>pr.id === b.dataset.edit);
+      if(!p) return;
+      editingId = p.id;
+      el('formTitle').textContent = 'Editar producto';
+      el('pName').value = p.name;
+      el('pBrand').value = p.brand || '';
+      el('pPrice').value = p.price ?? '';
+      el('pDesc').value = p.desc || '';
+      el('pImageUrl').value = (p.image && p.image.startsWith('http')) ? p.image : '';
+      pendingImage = (p.image && p.image.startsWith('data:')) ? p.image : null;
+      el('cancelEditBtn').classList.remove('hidden');
+      document.querySelector('[data-tab="productsTab"]').click();
+      window.scrollTo(0,0);
+    });
+  });
+  list.querySelectorAll('[data-del]').forEach(b=>{
+    b.addEventListener('click', async ()=>{
+      if(!confirm('¿Eliminar este producto?')) return;
+      const id = b.dataset.del;
+      try{
+        await removeProductFromSupabase(id);
+        data.products = data.products.filter(pr=>pr.id !== id);
+        renderPublic();
+        renderAdminList();
+      }catch(err){
+        console.error(err);
+        alert('No se pudo eliminar el producto.');
+      }
+    });
+  });
+}
+
+async function initApp(){
+  if(supabaseEnabled()){
+    await loadStoreSettingsFromSupabase();
+    await loadProductsFromSupabase();
+  } else {
+    console.warn('Supabase no configurado: revisa .env y abre la vitrina con npm run dev (no abras el HTML directo).');
+  }
+  renderPublic();
+}
+initApp();
+</script>
+</body>
+</html>
