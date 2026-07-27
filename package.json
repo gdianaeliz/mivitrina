@@ -1,8 +1,0 @@
-{
-  "name": "tienda",
-  "private": true,
-  "scripts": {
-    "dev": "node server.mjs",
-    "start": "node server.mjs"
-  }
-}

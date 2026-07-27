@@ -318,8 +318,11 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="supabase-config.js"></script>
 <script>
+// Configuración de Supabase
+window.SUPABASE_URL = 'https://tu-proyecto.supabase.co';
+window.SUPABASE_ANON_KEY = 'tu-anon-key-aqui';
+
 const defaultSettings = {
   storeName:'Mi Vitrina',
   tagline:'Todo lo que tengo para ti, en un solo lugar',
