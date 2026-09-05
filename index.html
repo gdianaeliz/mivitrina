@@ -445,7 +445,10 @@ function openOverlay(id){ el(id).classList.remove('hidden'); }
 function closeOverlay(id){ el(id).classList.add('hidden'); }
 
 document.querySelectorAll('[data-close]').forEach(btn=>{
-  btn.addEventListener('click', ()=> closeOverlay(btn.dataset.close));
+  btn.addEventListener('click', ()=> {
+    clearInactivityTimer();
+    closeOverlay(btn.dataset.close);
+  });
 });
 
 /* ---------- Render public catalog ---------- */
@@ -499,6 +502,7 @@ function escapeHtml(str){
 async function openAdminPanel(){
   fillSettingsForm();
   renderAdminList();
+  resetInactivityTimer();
   openOverlay('adminOverlay');
 }
 el('openAdminBtn').addEventListener('click', async ()=>{
@@ -537,8 +541,40 @@ el('loginSubmit').addEventListener('click', async ()=>{
 el('logoutBtn').addEventListener('click', async ()=>{
   const sb = getSupabase();
   await sb.auth.signOut();
+  clearInactivityTimer();
   closeOverlay('adminOverlay');
 });
+
+/* ---------- Inactividad: logout automático después de 10 min ---------- */
+let inactivityTimer = null;
+const INACTIVITY_TIME = 10 * 60 * 1000; // 10 minutos
+
+function resetInactivityTimer(){
+  clearInactivityTimer();
+  inactivityTimer = setTimeout(async ()=>{
+    const sb = getSupabase();
+    if(sb){
+      const { data: sessionData } = await sb.auth.getSession();
+      if(sessionData.session){
+        console.warn('Sesión expirada por inactividad');
+        await sb.auth.signOut();
+        closeOverlay('adminOverlay');
+        alert('Tu sesión expiró por inactividad. Por favor, vuelve a iniciar sesión.');
+      }
+    }
+  }, INACTIVITY_TIME);
+}
+
+function clearInactivityTimer(){
+  if(inactivityTimer){
+    clearTimeout(inactivityTimer);
+    inactivityTimer = null;
+  }
+}
+
+// Resetear timer en cualquier interacción dentro del panel
+document.addEventListener('click', resetInactivityTimer);
+document.addEventListener('keydown', resetInactivityTimer);
 
 /* ---------- Admin: tabs ---------- */
 document.querySelectorAll('.tab-btn').forEach(btn=>{
